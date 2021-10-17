@@ -1,6 +1,7 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 require("dotenv").config();
 
@@ -18,6 +19,11 @@ app.get("/", (_, res) => {
 
 const port = process.env.PORT || 1337;
 
-app.listen(port, () =>
-  console.log(`Server running on http://localhost:${port}`)
-);
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() =>
+    app.listen(port, () =>
+      console.log(`Server running on http://localhost:${port}`)
+    )
+  )
+  .catch((error) => console.error(error));
