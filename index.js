@@ -3,6 +3,8 @@ const helmet = require("helmet");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+const { notFound, errorHandler } = require("./middlewares/index");
+
 require("dotenv").config();
 
 const app = express();
@@ -16,6 +18,9 @@ app.get("/", (_, res) => {
     message: "Hello 👋",
   });
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 const port = process.env.PORT || 1337;
 
