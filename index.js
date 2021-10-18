@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const { notFound, errorHandler } = require("./middlewares/index");
+const authRoutes = require("./routes/user");
 
 require("dotenv").config();
 
@@ -18,6 +19,8 @@ app.get("/", (_, res) => {
     message: "Hello 👋",
   });
 });
+
+app.use("/auth", authRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
