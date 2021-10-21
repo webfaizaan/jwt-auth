@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const { notFound, errorHandler } = require("./middlewares/index");
-const authRoutes = require("./routes/user");
+const authRoutes = require("./routes/auth");
 
 require("dotenv").config();
 
