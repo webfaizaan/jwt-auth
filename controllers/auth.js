@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const validate = require("../validations/auth");
 const User = require("../models/user");
@@ -25,7 +26,19 @@ const register = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    res.status(201).json({ success: true, user: savedUser._id });
+    const token = jwt.sign(
+      { id: savedUser._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    });
+
+    res.status(201).json({ success: true, token });
   } catch (error) {
     next(error);
   }
