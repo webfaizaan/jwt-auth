@@ -48,7 +48,40 @@ const login = async (req, res, next) => {
   try {
     const value = await validate.login(req.body);
 
-    res.json({ message: "Success" });
+    const { email, password } = value;
+
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      const error = new Error("Email doesn't exists");
+      error.status = 400;
+      return next(error);
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+
+    if (!isPasswordCorrect) {
+      const error = new Error("Password is wrong");
+      error.status = 400;
+      return next(error);
+    }
+
+    const token = jwt.sign(
+      { id: existingUser._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    });
+
+    res.status(200).json({ success: true, token });
   } catch (error) {
     next(error);
   }
