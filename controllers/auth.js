@@ -40,6 +40,8 @@ const register = async (req, res, next) => {
 
     res.status(201).json({ success: true, token });
   } catch (error) {
+    if (error.name === "ValidationError") error.status = 422;
+
     next(error);
   }
 };
@@ -83,6 +85,8 @@ const login = async (req, res, next) => {
 
     res.status(200).json({ success: true, token });
   } catch (error) {
+    if (error.name === "ValidationError") error.status = 422;
+
     next(error);
   }
 };
