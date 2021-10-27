@@ -13,6 +13,7 @@ const errorHandler = (error, req, res, next) => {
   }
 
   res.json({
+    success: false,
     message: error.message,
     stack: process.NODE_ENV === "production" ? "🔥" : error.stack,
   });
