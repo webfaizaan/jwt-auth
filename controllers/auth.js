@@ -91,4 +91,10 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login };
+const logout = (req, res) => {
+  res.cookie("accessToken", "", { maxAge: 1 });
+
+  res.status(200).json({ success: true });
+};
+
+module.exports = { register, login, logout };
